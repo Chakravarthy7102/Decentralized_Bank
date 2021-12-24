@@ -60,25 +60,21 @@ contract dBank {
         //the total time the user is holding his coins in the bank is the below expression
         uint256 depositTime = block.timestamp - depositStart[msg.sender];
         //cal the intrest a user earned by the time of his/her withdrawing
-        uint256 intrestPerSecond = 31668017 *
-            (etherBalanceOf[msg.sender] / 1e16);
+        uint256 intrestPerSecond = 31668017 * (userBalance / 1e16);
         uint256 intrest = intrestPerSecond * depositTime;
 
         //withdraw the ethers in the account completely and trasfer it to the depositor
         msg.sender.transfer(userBalance);
-        etherBalanceOf[msg.sender] = 0;
+
         //minting the tokens that are earned as intrest by the user
         token.mint(msg.sender, intrest);
 
         //resetting the users data
+        etherBalanceOf[msg.sender] = 0;
         depositStart[msg.sender] = 0;
         isDeposited[msg.sender] = false;
 
         //emit the event
         emit Withdraw(msg.sender, userBalance, depositTime, intrest);
     }
-
-    function borrow() public payable {}
-
-    function payOff() public {}
 }
